@@ -61,7 +61,7 @@ def save_character(character, filename):
 
 # === Function 4: Load character from file ===
     def load_character(filename):
-    character = {}
+        character = {}
     with open(filename, "r") as f:
         for line in f:
             # Split the line at ": " and clean up spaces
