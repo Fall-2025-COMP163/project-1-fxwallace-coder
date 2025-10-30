@@ -60,7 +60,7 @@ def save_character(character, filename):
 
 
 # === Function 4: Load character from file ===
-    def load_character(filename):
+def load_character(filename):
         character = {}
     with open(filename, "r") as f:
         for line in f:
