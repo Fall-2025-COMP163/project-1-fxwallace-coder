@@ -58,10 +58,9 @@ def save_character(character, filename):
         f.write(f"Health: {character['health']}\n")
         f.write(f"Gold: {character['gold']}\n")
 
-
 # === Function 4: Load character from file ===
-def load_character(filename):
-        character = {}
+    def load_character(filename):
+    character = {}
     with open(filename, "r") as f:
         for line in f:
             # Split the line at ": " and clean up spaces
@@ -86,6 +85,8 @@ def load_character(filename):
                 character["gold"] = int(value)
 
     return character
+
+    
 
 
 # === Function 5: Display character info ===
