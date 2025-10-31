@@ -55,7 +55,7 @@ def create_character(name, character_class):
         magic = 14 + (level * 2)
         health = 100 + (level * 9)
     else:
-        # Invalid class - return zeros so tests handle it gracefully
+        # Invalid class 
         return (0, 0, 0)
 
     return (strength, magic, health)
