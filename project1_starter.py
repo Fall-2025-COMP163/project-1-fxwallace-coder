@@ -32,7 +32,7 @@ def create_character(name, character_class):
 
 
 # === Function 2: Calculate character stats ===
-    def calculate_stats(character_class, level):
+def calculate_stats(character_class, level):
     """Calculates base stats (strength, magic, health) based on class and level"""
     strength = 0
     magic = 0
