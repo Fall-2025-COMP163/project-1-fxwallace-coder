@@ -9,42 +9,58 @@ Example: AI helped with file I/O error handling logic in save_character function
 
 # === Function 1: Create a new character ===
 def create_character(name, character_class):
+    """Creates a new character dictionary with stats and gold"""
+    # Handle invalid class
+    if character_class not in ["Warrior", "Mage", "Rogue", "Cleric"]:
+        return None
+
+    level = 1
+    strength, magic, health = calculate_stats(character_class, level)
+    gold = 100  # simple default
+
     character = {
         "name": name,
         "class": character_class,
-        "level": 1,
-        "gold": 100
+        "level": level,
+        "strength": strength,
+        "magic": magic,
+        "health": health,
+        "gold": gold
     }
 
-    # Calculate base stats using helper function
-    stats = calculate_stats(character_class, character["level"])
-    character.update(stats)
     return character
 
 
 # === Function 2: Calculate character stats ===
-def calculate_stats(character_class, level):
-    # Base stats
-    if character_class.lower() == "warrior":
-        strength = 10 + (level * 3)
-        magic = 2 + (level * 1)
-        health = 30 + (level * 5)
-    elif character_class.lower() == "mage":
-        strength = 3 + (level * 1)
-        magic = 10 + (level * 3)
-        health = 20 + (level * 3)
-    elif character_class.lower() == "rogue":
-        strength = 6 + (level * 2)
-        magic = 5 + (level * 2)
-        health = 15 + (level * 3)
-    elif character_class.lower() == "cleric":
-        strength = 5 + (level * 2)
-        magic = 8 + (level * 3)
-        health = 25 + (level * 4)
-    else:
-        raise ValueError("Unknown character class!")
+    def calculate_stats(character_class, level):
+    """Calculates base stats (strength, magic, health) based on class and level"""
+    strength = 0
+    magic = 0
+    health = 0
 
-    return {"strength": strength, "magic": magic, "health": health}
+    if character_class == "Warrior":
+        strength = 15 + (level * 2)
+        magic = 3 + (level)
+        health = 120 + (level * 10)
+    elif character_class == "Mage":
+        strength = 4 + (level)
+        magic = 18 + (level * 2)
+        health = 80 + (level * 8)
+    elif character_class == "Rogue":
+        strength = 10 + (level * 2)
+        magic = 10 + (level)
+        health = 70 + (level * 7)
+    elif character_class == "Cleric":
+        strength = 9 + (level)
+        magic = 14 + (level * 2)
+        health = 100 + (level * 9)
+    else:
+        # Invalid class - return zeros so tests handle it gracefully
+        return (0, 0, 0)
+
+    return (strength, magic, health)
+
+
 
 
 # === Function 3: Save character to file ===
