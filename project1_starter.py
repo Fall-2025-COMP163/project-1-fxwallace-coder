@@ -59,7 +59,7 @@ def save_character(character, filename):
         f.write(f"Gold: {character['gold']}\n")
 
 # === Function 4: Load character from file ===
-    def load_character(filename):
+def load_character(filename):
     character = {}
     with open(filename, "r") as f:
         for line in f:
