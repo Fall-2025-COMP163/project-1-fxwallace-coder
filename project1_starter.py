@@ -64,45 +64,84 @@ def calculate_stats(character_class, level):
 
 
 # === Function 3: Save character to file ===
+import os
+
 def save_character(character, filename):
-    """Save the character to a text file in the required format.
-    Returns True if successful, False otherwise.
     """
-    with open(filename, "w") as f:
-        f.write("Character Name: " + character["name"] + "\n")
-        f.write("Class: " + character["class"] + "\n")
-        f.write("Level: " + str(int(character["level"])) + "\n")
-        f.write("Strength: " + str(int(character["strength"])) + "\n")
-        f.write("Magic: " + str(int(character["magic"])) + "\n")
-        f.write("Health: " + str(int(character["health"])) + "\n")
-        f.write("Gold: " + str(int(character["gold"])) + "\n")
-    return True
+    Save the character to a text file in the exact required format.
+    Returns True on success, False otherwise.
+    """
+    # Basic checks (use simple equality checks rather than "if not")
+    if filename == "":
+        return False
+
+    required_keys = ["name", "class", "level", "strength", "magic", "health", "gold"]
+    for k in required_keys:
+        if k not in character:
+            return False
+
+    file = open(filename, "w")
+    file.write("Character Name: " + str(character["name"]) + "\n")
+    file.write("Class: " + str(character["class"]) + "\n")
+    file.write("Level: " + str(int(character["level"])) + "\n")
+    file.write("Strength: " + str(int(character["strength"])) + "\n")
+    file.write("Magic: " + str(int(character["magic"])) + "\n")
+    file.write("Health: " + str(int(character["health"])) + "\n")
+    file.write("Gold: " + str(int(character["gold"])) + "\n")
+    file.close()
+
+    # Confirm file exists now
+    created = os.path.exists(filename)
+    if created == True:
+        return True
+    return False
+
 
 def load_character(filename):
-    if os.path.exists(filename) == False:
+    """
+    Load a character from a file saved with save_character.
+    Returns the character dict on success, or None if file missing or incomplete.
+    """
+    exists = os.path.exists(filename)
+    if exists == False:
         return None
 
     file = open(filename, "r")
-    lines = file.readlines()
+    raw_lines = file.readlines()
     file.close()
 
+    # Parse lines like "Character Name: value"
     data = {}
-    for line in lines:
-        line = line.strip()
+    for raw in raw_lines:
+        line = raw.strip()
+        if line == "":
+            continue
         parts = line.split(": ", 1)
-        if len(parts) == 2:
-            data[parts[0]] = parts[1]
+        if len(parts) != 2:
+            continue
+        key_label = parts[0].strip()
+        value = parts[1].strip()
+        data[key_label] = value
 
-    if "Character Name" in data and "Class" in data:
-        return {
-            "name": data["Character Name"],
-            "class": data["Class"],
-            "level": int(data["Level"]),
-            "strength": int(data["Strength"]),
-            "magic": int(data["Magic"]),
-            "health": int(data["Health"]),
-            "gold": int(data["Gold"])
-        }
+    # Ensure all required labels are present
+    required_labels = ["Character Name", "Class", "Level", "Strength", "Magic", "Health", "Gold"]
+    for lbl in required_labels:
+        if lbl not in data:
+            return None
+
+    # Convert numeric fields to int (tests expect ints)
+    character = {
+        "name": data["Character Name"],
+        "class": data["Class"],
+        "level": int(data["Level"]),
+        "strength": int(data["Strength"]),
+        "magic": int(data["Magic"]),
+        "health": int(data["Health"]),
+        "gold": int(data["Gold"])
+    }
+
+    return character
+
 
 
 
