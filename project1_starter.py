@@ -65,6 +65,7 @@ def calculate_stats(character_class, level):
 
 # === Function 3: Save character to file ===
 def save_character(character, filename):
+    """Save character data to a text file in required format"""
     with open(filename, "w") as f:
         f.write(f"Character Name: {character['name']}\n")
         f.write(f"Class: {character['class']}\n")
@@ -73,32 +74,34 @@ def save_character(character, filename):
         f.write(f"Magic: {character['magic']}\n")
         f.write(f"Health: {character['health']}\n")
         f.write(f"Gold: {character['gold']}\n")
+    return True
 
 # === Function 4: Load character from file ===
 def load_character(filename):
-    character = {}
-    with open(filename, "r") as f:
-        for line in f:
-            # Split the line at ": " and clean up spaces
-            key, value = line.strip().split(": ")
-            key = key.lower().strip()
-            value = value.strip()
+    """Load character data from a file"""
+    if not os.path.exists(filename):
+        return None
 
-            # Match the expected keys in the program
-            if key == "character name":
-                character["name"] = value
-            elif key == "class":
-                character["class"] = value
-            elif key == "level":
-                character["level"] = int(value)
-            elif key == "strength":
-                character["strength"] = int(value)
-            elif key == "magic":
-                character["magic"] = int(value)
-            elif key == "health":
-                character["health"] = int(value)
-            elif key == "gold":
-                character["gold"] = int(value)
+    with open(filename, "r") as f:
+        lines = f.readlines()
+
+    char_data = {}
+    for line in lines:
+        if ":" in line:
+            key, value = line.strip().split(":", 1)
+            key = key.strip()
+            value = value.strip()
+            char_data[key] = value
+
+    character = {
+        "name": char_data["Character Name"],
+        "class": char_data["Class"],
+        "level": int(char_data["Level"]),
+        "strength": int(char_data["Strength"]),
+        "magic": int(char_data["Magic"]),
+        "health": int(char_data["Health"]),
+        "gold": int(char_data["Gold"])
+    }
 
     return character
 
@@ -128,7 +131,7 @@ def level_up(character):
     return character
 
 
-# === Example gameplay flow (main program) ===
+# === Example (main program) ===
 if __name__ == "__main__":
     print("=== Welcome to the RPG Character Creator ===")
     name = input("Enter your character's name: ")
