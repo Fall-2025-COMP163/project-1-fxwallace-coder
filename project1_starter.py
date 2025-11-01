@@ -6,72 +6,79 @@ Date: [Date]
 AI Usage: [Document any AI assistance used]
 Example: AI helped with file I/O error handling logic in save_character function
 """
+# project1_starter.py
+# Clean, test-friendly implementation for the assignment
+# No top-level I/O (safe to import), simple logic, integer numeric fields
+
 import os
+
 # === Function 1: Create a new character ===
 def create_character(name, character_class):
-    """Creates a new character dictionary with stats and gold"""
-    # Handle invalid class
-    if character_class not in ["Warrior", "Mage", "Rogue", "Cleric"]:
+    """
+    Create and return a character dict for valid classes.
+    Returns None for invalid class.
+    Keeps the class string exactly as passed.
+    """
+    valid = ["Warrior", "Mage", "Rogue", "Cleric"]
+    if character_class not in valid:
         return None
 
     level = 1
     strength, magic, health = calculate_stats(character_class, level)
-    gold = 100  # simple default
-
     character = {
         "name": name,
         "class": character_class,
-        "level": level,
-        "strength": strength,
-        "magic": magic,
-        "health": health,
-        "gold": gold
+        "level": int(level),
+        "strength": int(strength),
+        "magic": int(magic),
+        "health": int(health),
+        "gold": int(100)
     }
-
     return character
 
 
 # === Function 2: Calculate character stats ===
 def calculate_stats(character_class, level):
-    """Calculates base stats (strength, magic, health) based on class and level"""
-    strength = 0
-    magic = 0
-    health = 0
+    """
+    Return a tuple (strength, magic, health) as integers.
+    Accepts class names exactly as in the assignment but handles internally.
+    """
+    # ensure level is an integer >= 1
+    lvl = int(level)
+    if lvl < 1:
+        lvl = 1
 
+    # Use simple, deterministic base values and integer scaling
     if character_class == "Warrior":
-        strength = 15 + (level * 2)
-        magic = 3 + (level)
-        health = 120 + (level * 10)
+        base_s, base_m, base_h = 15, 3, 120
+        per_s, per_m, per_h = 3, 1, 10
     elif character_class == "Mage":
-        strength = 4 + (level)
-        magic = 18 + (level * 2)
-        health = 80 + (level * 8)
+        base_s, base_m, base_h = 5, 15, 80
+        per_s, per_m, per_h = 1, 4, 6
     elif character_class == "Rogue":
-        strength = 10 + (level * 2)
-        magic = 10 + (level)
-        health = 70 + (level * 7)
+        base_s, base_m, base_h = 8, 8, 70
+        per_s, per_m, per_h = 2, 2, 5
     elif character_class == "Cleric":
-        strength = 9 + (level)
-        magic = 14 + (level * 2)
-        health = 100 + (level * 9)
+        base_s, base_m, base_h = 9, 14, 100
+        per_s, per_m, per_h = 2, 3, 8
     else:
-        # Invalid class 
+        # unknown class -> return zeros
         return (0, 0, 0)
 
+    offset = lvl - 1
+    strength = int(base_s + per_s * offset)
+    magic = int(base_m + per_m * offset)
+    health = int(base_h + per_h * offset)
     return (strength, magic, health)
 
 
-
-
 # === Function 3: Save character to file ===
-import os
-
 def save_character(character, filename):
     """
-    Save the character to a text file in the exact required format.
+    Save character to text file in exact required format.
     Returns True on success, False otherwise.
     """
-    # Basic checks (use simple equality checks rather than "if not")
+    # filename should be a non-empty string
     if filename == "":
         return False
 
@@ -80,6 +87,7 @@ def save_character(character, filename):
         if k not in character:
             return False
 
+    # Write file with exact labels and integer numeric values
     file = open(filename, "w")
     file.write("Character Name: " + str(character["name"]) + "\n")
     file.write("Class: " + str(character["class"]) + "\n")
@@ -90,42 +98,42 @@ def save_character(character, filename):
     file.write("Gold: " + str(int(character["gold"])) + "\n")
     file.close()
 
-    # Confirm file exists now
-    created = os.path.exists(filename)
-    if created == True:
+    # verify file exists now
+    if os.path.exists(filename) == True:
         return True
     return False
 
 
+# === Function 4: Load character from file ===
 def load_character(filename):
     """
-    Load a character from a file saved with save_character.
-    Returns the character dict on success, or None if file missing or incomplete.
+    Load character from a file saved with save_character.
+    Return dict on success, None if file missing or incomplete.
     """
     if os.path.exists(filename) == False:
         return None
 
     file = open(filename, "r")
-    lines = file.readlines()
+    raw_lines = file.readlines()
     file.close()
 
     data = {}
-    for line in lines:
-        line = line.strip()
+    for raw in raw_lines:
+        line = raw.strip()
         if line == "":
             continue
         parts = line.split(": ", 1)
-        if len(parts) == 2:
-            key_label = parts[0].strip()
-            value = parts[1].strip()
-            data[key_label] = value
+        if len(parts) != 2:
+            continue
+        key_label = parts[0].strip()
+        value = parts[1].strip()
+        data[key_label] = value
 
     required_labels = ["Character Name", "Class", "Level", "Strength", "Magic", "Health", "Gold"]
     for lbl in required_labels:
         if lbl not in data:
             return None
 
-    # Create dict manually (not using update or conversion)
     character = {}
     character["name"] = data["Character Name"]
     character["class"] = data["Class"]
@@ -134,64 +142,43 @@ def load_character(filename):
     character["magic"] = int(data["Magic"])
     character["health"] = int(data["Health"])
     character["gold"] = int(data["Gold"])
-
     return character
-
-
-
 
 
 # === Function 5: Display character info ===
 def display_character(character):
+    if character is None:
+        return
     print("===== CHARACTER INFO =====")
-    print(f"Name: {character['name']}")
-    print(f"Class: {character['class']}")
-    print(f"Level: {character['level']}")
-    print(f"Strength: {character['strength']}")
-    print(f"Magic: {character['magic']}")
-    print(f"Health: {character['health']}")
-    print(f"Gold: {character['gold']}")
-    print("===========================")
+    print("Name:", character.get("name", ""))
+    print("Class:", character.get("class", ""))
+    print("Level:", character.get("level", ""))
+    print("Strength:", character.get("strength", ""))
+    print("Magic:", character.get("magic", ""))
+    print("Health:", character.get("health", ""))
+    print("Gold:", character.get("gold", ""))
+    print("==========================")
 
 
 # === Function 6: Level up character ===
 def level_up(character):
-    character["level"] += 1
-    print(f"\n {character['name']} leveled up to Level {character['level']}!")
-    stats = calculate_stats(character["class"], character["level"])
-    strength, magic, health = calculate_stats(character["class"], character["level"])
-    character["strength"] = strength
-    character["magic"] = magic
-    character["health"] = health
-    character["gold"] += 50
+    if character is None:
+        return None
+    character["level"] = int(character["level"]) + 1
+    s, m, h = calculate_stats(character["class"], character["level"])
+    character["strength"] = int(s)
+    character["magic"] = int(m)
+    character["health"] = int(h)
+    character["gold"] = int(character.get("gold", 0)) + 50
     return character
 
 
-# === Example (main program) ===
+# No top-level code that runs on import beyond definitions.
 if __name__ == "__main__":
+    # Simple interactive demo for manual runs (won't run during import in tests)
     print("=== Welcome to the RPG Character Creator ===")
     name = input("Enter your character's name: ")
     print("Choose a class: Warrior, Mage, Rogue, Cleric")
     character_class = input("Enter class: ")
-
-    # Create and show new character
     player = create_character(name, character_class)
     display_character(player)
-
-    # Save to file
-    filename = f"{name}_save.txt"
-    save_character(player, filename)
-    print(f"Character saved to '{filename}'.")
-
-    # Level up example
-    level_up(player)
-    display_character(player)
-
-    # Save again
-    save_character(player, filename)
-    print("Progress saved.\n")
-
-    # Load and show from file
-    print("Loading character from file...")
-    loaded_player = load_character(filename)
-    display_character(loaded_player)
