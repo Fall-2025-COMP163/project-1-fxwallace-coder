@@ -78,9 +78,7 @@ def save_character(character, filename):
         f.write("Gold: " + str(int(character["gold"])) + "\n")
     return True
 
-
 def load_character(filename):
-    """Load a character from file. Returns the character dict or None if file missing."""
     exists = os.path.exists(filename)
     if exists == False:
         return None
@@ -105,8 +103,8 @@ def load_character(filename):
         "gold": int(data["Gold"])
     }
 
-    return character  
-    
+    return character
+
 
 
 # === Function 5: Display character info ===
