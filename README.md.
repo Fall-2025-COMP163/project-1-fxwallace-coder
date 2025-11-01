@@ -1,1 +1,28 @@
+This program allows the user to create, save, load, and level up an RPG-style character.
+The user can choose a name and class, view their stats, and save progress to a text file.
 
+Functions:
+create_character(name, character_class)
+Creates a character dictionary with default level 1, base stats, and starting gold.
+
+calculate_stats(character_class, level)
+Returns strength, magic, and health values depending on class and level.
+
+save_character(character, filename)
+Saves character data to a text file in a readable format.
+
+load_character(filename)
+Reads character data from a text file and recreates the dictionary.
+
+display_character(character)
+Prints the character’s information to the screen.
+
+level_up(character)
+Increases the character’s level and recalculates stats.
+
+
+The program will:
+Display your new character
+Save your progress to a file
+Level up your character
+Load and display your saved character
