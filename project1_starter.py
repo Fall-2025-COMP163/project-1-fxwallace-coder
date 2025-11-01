@@ -78,14 +78,29 @@ def save_character(character, filename):
     Save character to text file in exact required format.
     Returns True on success, False otherwise.
     """
-    # filename should be a non-empty string
-    if filename == "":
+    file = None
+    opened = False
+    if os.path.dirname(filename) == "":
+        file = open(filename, "w")
+        opened = True
+    else:
+        folder = os.path.dirname(filename)
+        if os.path.exists(folder):
+            file = open(filename, "w")
+            opened = True
+
+    if opened == False:
         return False
 
-    required_keys = ["name", "class", "level", "strength", "magic", "health", "gold"]
-    for k in required_keys:
-        if k not in character:
-            return False
+    file.write("Character Name: " + str(character["name"]) + "\n")
+    file.write("Class: " + str(character["class"]) + "\n")
+    file.write("Level: " + str(int(character["level"])) + "\n")
+    file.write("Strength: " + str(int(character["strength"])) + "\n")
+    file.write("Magic: " + str(int(character["magic"])) + "\n")
+    file.write("Health: " + str(int(character["health"])) + "\n")
+    file.write("Gold: " + str(int(character["gold"])) + "\n")
+    file.close()
+    return True
 
     # Write file with exact labels and integer numeric values
     file = open(filename, "w")
