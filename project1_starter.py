@@ -64,45 +64,48 @@ def calculate_stats(character_class, level):
 
 
 # === Function 3: Save character to file ===
-  def save_character(character, filename):
-    """Save character data to a text file in required format"""
+def save_character(character, filename):
+    """Save the character to a text file in the required format.
+    Returns True if successful, False otherwise.
+    """
     with open(filename, "w") as f:
-        f.write(f"Character Name: {character['name']}\n")
-        f.write(f"Class: {character['class']}\n")
-        f.write(f"Level: {character['level']}\n")
-        f.write(f"Strength: {character['strength']}\n")
-        f.write(f"Magic: {character['magic']}\n")
-        f.write(f"Health: {character['health']}\n")
-        f.write(f"Gold: {character['gold']}\n")
-        f.write("\n")  # ensure final newline (pytest sometimes checks for it)
+        f.write("Character Name: " + character["name"] + "\n")
+        f.write("Class: " + character["class"] + "\n")
+        f.write("Level: " + str(int(character["level"])) + "\n")
+        f.write("Strength: " + str(int(character["strength"])) + "\n")
+        f.write("Magic: " + str(int(character["magic"])) + "\n")
+        f.write("Health: " + str(int(character["health"])) + "\n")
+        f.write("Gold: " + str(int(character["gold"])) + "\n")
     return True
 
 
 def load_character(filename):
-    """Load character data from a file"""
-    if not os.path.isfile(filename):
+    """Load a character from file. Returns the character dict or None if file missing."""
+    exists = os.path.exists(filename)
+    if exists == False:
         return None
 
-    with open(filename, "r") as f:
-        lines = [line.strip() for line in f if line.strip()]
+    file = open(filename, "r")
+    lines = file.readlines()
+    file.close()
 
-    char_data = {}
+    data = {}
     for line in lines:
-        if ":" in line:
-            key, value = line.split(":", 1)
-            char_data[key.strip()] = value.strip()
+        parts = line.strip().split(": ")
+        if len(parts) == 2:
+            data[parts[0]] = parts[1]
 
-    # Convert numeric fields properly
-    return {
-        "name": char_data["Character Name"],
-        "class": char_data["Class"],
-        "level": float(char_data["Level"]) if "." in char_data["Level"] else int(char_data["Level"]),
-        "strength": float(char_data["Strength"]) if "." in char_data["Strength"] else int(char_data["Strength"]),
-        "magic": float(char_data["Magic"]) if "." in char_data["Magic"] else int(char_data["Magic"]),
-        "health": float(char_data["Health"]) if "." in char_data["Health"] else int(char_data["Health"]),
-        "gold": float(char_data["Gold"]) if "." in char_data["Gold"] else int(char_data["Gold"]),
+    character = {
+        "name": data["Character Name"],
+        "class": data["Class"],
+        "level": int(data["Level"]),
+        "strength": int(data["Strength"]),
+        "magic": int(data["Magic"]),
+        "health": int(data["Health"]),
+        "gold": int(data["Gold"])
     }
 
+    return character  
     
 
 
