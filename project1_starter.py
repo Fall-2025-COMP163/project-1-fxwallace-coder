@@ -79,8 +79,7 @@ def save_character(character, filename):
     return True
 
 def load_character(filename):
-    exists = os.path.exists(filename)
-    if exists == False:
+    if os.path.exists(filename) == False:
         return None
 
     file = open(filename, "r")
@@ -89,21 +88,22 @@ def load_character(filename):
 
     data = {}
     for line in lines:
-        parts = line.strip().split(": ")
+        line = line.strip()
+        parts = line.split(": ", 1)
         if len(parts) == 2:
             data[parts[0]] = parts[1]
 
-    character = {
-        "name": data["Character Name"],
-        "class": data["Class"],
-        "level": int(data["Level"]),
-        "strength": int(data["Strength"]),
-        "magic": int(data["Magic"]),
-        "health": int(data["Health"]),
-        "gold": int(data["Gold"])
-    }
+    if "Character Name" in data and "Class" in data:
+        return {
+            "name": data["Character Name"],
+            "class": data["Class"],
+            "level": int(data["Level"]),
+            "strength": int(data["Strength"]),
+            "magic": int(data["Magic"]),
+            "health": int(data["Health"]),
+            "gold": int(data["Gold"])
+        }
 
-    return character
 
 
 
