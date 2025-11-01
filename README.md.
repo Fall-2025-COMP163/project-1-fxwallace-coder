@@ -1,6 +1,17 @@
 This program allows the user to create, save, load, and level up an RPG-style character.
 The user can choose a name and class, view their stats, and save progress to a text file.
 
+Extra credit: User Backstory:
+def add_backstory(character):
+    """
+    Prompts the user to enter a short backstory for the character.
+    Saves it in the character dictionary under the key 'backstory'.
+    """
+    print("\n--- Add Your Character Backstory ---")
+    story = input("Enter a short backstory for your character: ")
+    character["backstory"] = story
+    print("Backstory saved!\n")
+
 Functions:
 create_character(name, character_class)
 Creates a character dictionary with default level 1, base stats, and starting gold.
