@@ -159,7 +159,10 @@ def level_up(character):
     character["level"] += 1
     print(f"\n {character['name']} leveled up to Level {character['level']}!")
     stats = calculate_stats(character["class"], character["level"])
-    character.update(stats)
+    strength, magic, health = calculate_stats(character["class"], character["level"])
+    character["strength"] = strength
+    character["magic"] = magic
+    character["health"] = health
     character["gold"] += 50
     return character
 
