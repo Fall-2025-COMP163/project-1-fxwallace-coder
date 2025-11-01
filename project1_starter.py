@@ -102,43 +102,38 @@ def load_character(filename):
     Load a character from a file saved with save_character.
     Returns the character dict on success, or None if file missing or incomplete.
     """
-    exists = os.path.exists(filename)
-    if exists == False:
+    if os.path.exists(filename) == False:
         return None
 
     file = open(filename, "r")
-    raw_lines = file.readlines()
+    lines = file.readlines()
     file.close()
 
-    # Parse lines like "Character Name: value"
     data = {}
-    for raw in raw_lines:
-        line = raw.strip()
+    for line in lines:
+        line = line.strip()
         if line == "":
             continue
         parts = line.split(": ", 1)
-        if len(parts) != 2:
-            continue
-        key_label = parts[0].strip()
-        value = parts[1].strip()
-        data[key_label] = value
+        if len(parts) == 2:
+            key_label = parts[0].strip()
+            value = parts[1].strip()
+            data[key_label] = value
 
-    # Ensure all required labels are present
     required_labels = ["Character Name", "Class", "Level", "Strength", "Magic", "Health", "Gold"]
     for lbl in required_labels:
         if lbl not in data:
             return None
 
-    # Convert numeric fields to int (tests expect ints)
-    character = {
-        "name": data["Character Name"],
-        "class": data["Class"],
-        "level": int(data["Level"]),
-        "strength": int(data["Strength"]),
-        "magic": int(data["Magic"]),
-        "health": int(data["Health"]),
-        "gold": int(data["Gold"])
-    }
+    # Create dict manually (not using update or conversion)
+    character = {}
+    character["name"] = data["Character Name"]
+    character["class"] = data["Class"]
+    character["level"] = int(data["Level"])
+    character["strength"] = int(data["Strength"])
+    character["magic"] = int(data["Magic"])
+    character["health"] = int(data["Health"])
+    character["gold"] = int(data["Gold"])
 
     return character
 
