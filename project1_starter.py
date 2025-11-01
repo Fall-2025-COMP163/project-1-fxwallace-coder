@@ -6,7 +6,7 @@ Date: [Date]
 AI Usage: [Document any AI assistance used]
 Example: AI helped with file I/O error handling logic in save_character function
 """
-
+import os
 # === Function 1: Create a new character ===
 def create_character(name, character_class):
     """Creates a new character dictionary with stats and gold"""
